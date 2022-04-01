@@ -56,7 +56,10 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
+
+    // Enable PostCSS Support
+    .enablePostCssLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
@@ -70,12 +73,6 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
-
-  // Enable Sass Support
-  .enableSassLoader()
-
-  // Enable PostCSS Support
-  .enablePostCssLoader()
 ;
 
 module.exports = Encore.getWebpackConfig();

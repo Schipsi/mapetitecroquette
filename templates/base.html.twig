@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html class="bg-blue-400">
+<html
+    x-data="{color: 'bg-blue-400'}"
+    :class="color"
+    x-on:click="color = color === 'bg-blue-400' ? 'bg-red-400' : 'bg-blue-400'"
+>
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
