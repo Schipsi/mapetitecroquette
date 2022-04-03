@@ -1,12 +1,8 @@
 <!DOCTYPE html>
-<html
-    x-data="{color: 'bg-blue-400'}"
-    :class="color"
-    x-on:click="color = color === 'bg-blue-400' ? 'bg-red-400' : 'bg-blue-400'"
->
+<html class="bg-purple-900">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
@@ -17,7 +13,33 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
-    <body>
+    <body class="flex flex-col justify-start items-center antialiased h-screen">
+        <div class="w-full bg-purple-700 flex items-center justify-between flex-wrap">
+            <div class="w-full h-10 my-1 flex items-center justify-center">
+                <img class="h-10 w-100" src="{{ asset('images/kappa.png') }}" />
+                <p class="text-lg font-semibold">Tiercé Kappa</p>
+            </div>
+            <div class="w-full h-10 flex items-center justify-between">
+                <a href="{{ path('home') }}" class="w-1/3 h-full py-1 border-r border-t border-purple-500 hover:bg-purple-500 focus:bg-purple-400 flex items-center justify-center">
+                    <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path fill="currentColor" d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"/>
+                    </svg>
+                </a>
+                <a href="{{ path('home') }}" class="w-1/3 h-full py-1 border-y border-t border-purple-500 hover:bg-purple-500 focus:bg-purple-400 flex items-center justify-center">
+                    <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                        <path fill="currentColor" d="M572.1 82.38C569.5 71.59 559.8 64 548.7 64h-100.8c.2422-12.45 .1078-23.7-.1559-33.02C447.3 13.63 433.2 0 415.8 0H160.2C142.8 0 128.7 13.63 128.2 30.98C127.1 40.3 127.8 51.55 128.1 64H27.26C16.16 64 6.537 71.59 3.912 82.38C3.1 85.78-15.71 167.2 37.07 245.9c37.44 55.82 100.6 95.03 187.5 117.4c18.7 4.805 31.41 22.06 31.41 41.37C256 428.5 236.5 448 212.6 448H208c-26.51 0-47.99 21.49-47.99 48c0 8.836 7.163 16 15.1 16h223.1c8.836 0 15.1-7.164 15.1-16c0-26.51-21.48-48-47.99-48h-4.644c-23.86 0-43.36-19.5-43.36-43.35c0-19.31 12.71-36.57 31.41-41.37c86.96-22.34 150.1-61.55 187.5-117.4C591.7 167.2 572.9 85.78 572.1 82.38zM77.41 219.8C49.47 178.6 47.01 135.7 48.38 112h80.39c5.359 59.62 20.35 131.1 57.67 189.1C137.4 281.6 100.9 254.4 77.41 219.8zM498.6 219.8c-23.44 34.6-59.94 61.75-109 81.22C426.9 243.1 441.9 171.6 447.2 112h80.39C528.1 135.7 526.5 178.7 498.6 219.8z"/>
+                    </svg>
+                </a>
+                <a href="{{ path('home') }}" class="w-1/3 h-full py-1 border-l border-t border-purple-500 hover:bg-purple-500 focus:bg-purple-400 flex items-center justify-center">
+                    <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path fill="currentColor" d="M256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C201.7 512 151.2 495 109.7 466.1C95.2 455.1 91.64 436 101.8 421.5C111.9 407 131.8 403.5 146.3 413.6C177.4 435.3 215.2 448 256 448C362 448 448 362 448 256C448 149.1 362 64 256 64C202.1 64 155 85.46 120.2 120.2L151 151C166.1 166.1 155.4 192 134.1 192H24C10.75 192 0 181.3 0 168V57.94C0 36.56 25.85 25.85 40.97 40.97L74.98 74.98C121.3 28.69 185.3 0 255.1 0L256 0zM256 128C269.3 128 280 138.7 280 152V246.1L344.1 311C354.3 320.4 354.3 335.6 344.1 344.1C335.6 354.3 320.4 354.3 311 344.1L239 272.1C234.5 268.5 232 262.4 232 256V152C232 138.7 242.7 128 256 128V128z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="container grow flex justify-center items-center flex-wrap">
+            <div>test</div>
+        </div>
         {% block body %}{% endblock %}
     </body>
 </html>
