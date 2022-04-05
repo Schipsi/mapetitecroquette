@@ -26,6 +26,11 @@ security:
                 check_path: login
             logout:
                 path: logout
+            remember_me:
+                secret: '%kernel.secret'
+                lifetime: 604800 # 1 week in seconds
+                path: /
+                always_remember_me: true
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -36,6 +41,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/login, role: PUBLIC_ACCESS }
+        - { path: ^/register, role: PUBLIC_ACCESS }
         - { path: ^/, role: ROLE_USER }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

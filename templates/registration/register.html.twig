@@ -1,18 +1,57 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_not_connected.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <div class="flex justify-center">
+        <h1 class="text-lg font-semibold">Inscription</h1>
+    </div>
 
     {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        <div class="form-control">
+            <div class="font-semibold">
+                {{ form_label(registrationForm.email) }}
+            </div>
+            <div>
+                {{ form_widget(registrationForm.email, {'attr': {'class': 'mt-2'}}) }}
+            </div>
 
-        <button type="submit" class="btn">Register</button>
+            <div class="text-red-500">
+                {{ form_errors(registrationForm.email) }}
+            </div>
+        </div>
+
+        <div class="form-control mt-4">
+            <div class="font-semibold">
+                {{ form_label(registrationForm.username) }}
+            </div>
+            <div>
+                {{ form_widget(registrationForm.username, {'attr': {'class': 'mt-2'}}) }}
+            </div>
+
+            <div class="text-red-500">
+                {{ form_errors(registrationForm.username) }}
+            </div>
+        </div>
+
+        <div class="form-control mt-4">
+            <div class="font-semibold">
+                {{ form_label(registrationForm.plainPassword, 'Mot de passe') }}
+            </div>
+            <div>
+                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'mt-2'}}) }}
+            </div>
+
+            <div class="text-red-500">
+                {{ form_errors(registrationForm.plainPassword) }}
+            </div>
+        </div>
+
+        <div class="mt-4 flex justify-center">
+            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                S'inscrire
+            </button>
+        </div>
+
     {{ form_end(registrationForm) }}
 {% endblock %}
