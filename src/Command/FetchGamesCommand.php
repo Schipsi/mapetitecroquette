@@ -6,6 +6,7 @@ namespace App\Command;
 
 use App\Entity\Game;
 use App\Repository\GameRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,15 +17,18 @@ class FetchGamesCommand extends Command
 {
     private HttpClientInterface $httpClient;
     private GameRepository $gameRepository;
+    private EntityManagerInterface $em;
 
     public function __construct(
         HttpClientInterface $httpClient,
-        GameRepository $gameRepository
+        GameRepository $gameRepository,
+        EntityManagerInterface $em,
     ) {
         parent::__construct();
 
         $this->httpClient = $httpClient;
         $this->gameRepository = $gameRepository;
+        $this->em = $em;
     }
 
     protected static $defaultName = 'app:fetch-games';
@@ -58,14 +62,37 @@ class FetchGamesCommand extends Command
         $existingGamesId = \array_map(fn (Game $game): string => $game->getId(), $existingGames);
 
         foreach ($events as $event) {
-            if (\in_array($event['match']['id'], $existingGamesId)) {
+            $matchId = $event['match']['id'];
+
+            if (\in_array($matchId, $existingGamesId)) {
+                $game = $existingGames[\array_search($matchId, $existingGamesId)];
+
+                // If game is not completed, we update the game info to make sure it is fresh
+                if (Game::STATE_COMPLETED !== $game->getState()) {
+                    $game->setDate(new \DateTimeImmutable($event['startTime']));
+                    $game->setNameTeam1($event['match']['teams'][0]['name']);
+                    $game->setNameTeam2($event['match']['teams'][1]['name']);
+                    $game->setCodeTeam1($event['match']['teams'][0]['code']);
+                    $game->setCodeTeam2($event['match']['teams'][1]['code']);
+                    $game->setImageTeam1($event['match']['teams'][0]['image']);
+                    $game->setImageTeam2($event['match']['teams'][1]['image']);
+                    $game->setState($event['state']);
+
+                    if (Game::STATE_COMPLETED === $event['state']) {
+                        $game->setOutComeTeam1($event['match']['teams'][0]['result']['outcome']);
+                        $game->setOutComeTeam2($event['match']['teams'][1]['result']['outcome']);
+                    }
+
+                    $this->em->flush();
+                }
+
                 $progressBar->advance();
 
                 continue;
             }
 
             $game = new Game(
-                $event['match']['id'],
+                $matchId,
                 new \DateTimeImmutable($event['startTime']),
                 $event['match']['teams'][0]['name'],
                 $event['match']['teams'][1]['name'],
