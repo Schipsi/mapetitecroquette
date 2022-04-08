@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\GameRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
@@ -50,6 +52,9 @@ class Game
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $outcomeTeam2;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'Bet')]
+    private $bets;
+
     public function __construct(
         string $id,
         \DateTimeImmutable $date,
@@ -70,6 +75,8 @@ class Game
         $this->imageTeam1 = $imageTeam1;
         $this->imageTeam2 = $imageTeam2;
         $this->state = $state;
+
+        $this->bets = new ArrayCollection();
     }
 
     public function getId(): string
@@ -180,5 +187,10 @@ class Game
     public function setState(?string $state): void
     {
         $this->state = $state;
+    }
+
+    public function getBets(): Collection
+    {
+        return $this->bets;
     }
 }
