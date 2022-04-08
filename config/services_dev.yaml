@@ -1,0 +1,4 @@
+services:
+    App\Doctrine\EventListener\FixPostgresDefaultSchemaListener:
+        tags:
+            - { name: doctrine.event_listener, event: postGenerateSchema }

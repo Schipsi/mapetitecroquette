@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique{% endblock %}
+
+{% block body %}
+    <div class="flex justify-center">
+        <h1 class="text-lg font-semibold">Historique</h1>
+    </div>
+
+    <div class="flex justify-center items-center flex-col mt-6 space-y-6">
+        {% for game in games %}
+            <div class="flex justify-center items-center flex-col">
+                <p class="text-md font-semibold">{{ game.date|date('d/m/Y  \\à G\\hi') }}</p>
+                <div class="mt-2 max-w-full flex justify-center items-center space-x-4">
+                    <div class="
+                        w-28 sm:w-40 md:w-60 p-4 rounded-lg flex justify-end items-center space-x-4 text-white
+                        {% if game.outComeTeam1 is same as constant('OUTCOME_WIN', game) %}border-4 border-green-500{% else %}border-4 border-red-500{% endif %}
+                    ">
+                        <p class="hidden md:block">{{ game.nameTeam1 }}</p>
+                        <p class="md:hidden">{{ game.codeTeam1 }}</p>
+                        <img class="w-10 h-10" src="{{ game.imageTeam1 }}"/>
+                    </div>
+                    <p class="text-md font-semibold">VS</p>
+                    <div class="
+                        w-28 sm:w-40 md:w-60 p-4 rounded-lg flex justify-start items-center space-x-4 text-white
+                        {% if game.outComeTeam2 is same as constant('OUTCOME_WIN', game) %}border-4 border-green-500{% else %}border-4 border-red-500{% endif %}
+                    ">
+                        <img class="w-10 h-10" src="{{ game.imageTeam2 }}"/>
+                        <p class="hidden md:block">{{ game.nameTeam2 }}</p>
+                        <p class="md:hidden">{{ game.codeTeam2 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% if not loop.last %}
+                <div class="w-full border-b border-gray-900"></div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
