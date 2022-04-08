@@ -18,6 +18,16 @@ services:
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - ./public:/srv/app/public:ro
 
+  phppgadmin:
+    image: docker.io/bitnami/phppgadmin:7
+    environment:
+      - DATABASE_HOST=database
+    ports:
+      - '8080:8080'
+      - '8081:8443'
+    depends_on:
+      - database
+
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
 
