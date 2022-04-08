@@ -2,35 +2,38 @@
 
 namespace App\Entity;
 
-use App\Repository\BetRepository;
+use App\Repository\PredictionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: BetRepository::class)]
-#[ORM\Table(name: '`bet`')]
-class Bet
+#[ORM\Entity(repositoryClass: PredictionRepository::class)]
+#[ORM\Table(name: '`prediction`')]
+class Prediction
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'bets')]
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'predictions')]
     private $user;
 
-    #[ORM\ManyToOne(targetEntity: 'Game', inversedBy: 'bets')]
+    #[ORM\ManyToOne(targetEntity: 'Game', inversedBy: 'predictions')]
     private $game;
 
     #[ORM\Column(type: 'string')]
-    private $prediction;
+    private $team;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $realised;
 
     public function __construct(
         User $user,
         Game $game,
-        string $prediction,
+        string $team,
     ) {
         $this->user = $user;
         $this->game = $game;
-        $this->prediction = $prediction;
+        $this->team = $team;
     }
 
     public function getId()
@@ -63,13 +66,23 @@ class Bet
         $this->game = $game;
     }
 
-    public function getPrediction(): string
+    public function getTeam(): string
     {
-        return $this->prediction;
+        return $this->team;
     }
 
-    public function setPrediction(string $prediction): void
+    public function setTeam(string $team): void
     {
-        $this->prediction = $prediction;
+        $this->team = $team;
+    }
+
+    public function getRealised(): ?bool
+    {
+        return $this->realised;
+    }
+
+    public function setRealised(?bool $realised): void
+    {
+        $this->realised = $realised;
     }
 }

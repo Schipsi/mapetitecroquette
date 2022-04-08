@@ -11,15 +11,15 @@
         {% for game in games %}
             <div
                 class="flex justify-center items-center flex-col"
-                x-data="bet(null)"
-                x-init="makeBet('{{ game.id }}', null)"
+                x-data="predict(null)"
+                x-init="makePrediction('{{ game.id }}', null)"
             >
                 <p class="text-md font-semibold">{{ game.date|date('d/m/Y  \\à G\\hi') }}</p>
                 <div class="mt-2 max-w-full flex justify-center items-center space-x-4">
                     <div
                         class="w-28 sm:w-40 md:w-60 p-4 hover:bg-gray-900 rounded-lg flex justify-end items-center space-x-4 cursor-pointer border"
                         :class="prediction === '{{ game.codeTeam1 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
-                        @click="makeBet('{{ game.id }}', '{{ game.codeTeam1 }}')"
+                        @click="makePrediction('{{ game.id }}', '{{ game.codeTeam1 }}')"
                     >
                         <p class="hidden md:block">{{ game.nameTeam1 }}</p>
                         <p class="md:hidden">{{ game.codeTeam1 }}</p>
@@ -29,7 +29,7 @@
                     <div
                         class="w-28 sm:w-40 md:w-60 p-4 hover:bg-gray-900 rounded-lg flex justify-start items-center space-x-4 cursor-pointer border"
                         :class="prediction === '{{ game.codeTeam2 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
-                        @click="makeBet('{{ game.id }}', '{{ game.codeTeam2 }}')"
+                        @click="makePrediction('{{ game.id }}', '{{ game.codeTeam2 }}')"
                     >
                         <img class="w-10 h-10" src="{{ game.imageTeam2 }}"/>
                         <p class="hidden md:block">{{ game.nameTeam2 }}</p>
@@ -49,11 +49,11 @@
     {{ parent() }}
 
     <script>
-        function bet(prediction) {
+        function predict(prediction) {
             return {
                 prediction,
-                async makeBet(game_id, team) {
-                    const fetchUrl = "{{ path('bet') }}";
+                async makePrediction(game_id, team) {
+                    const fetchUrl = "{{ path('prediction') }}";
                     const data = {
                         game_id,
                         team,

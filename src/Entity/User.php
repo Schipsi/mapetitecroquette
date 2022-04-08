@@ -34,11 +34,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'Bet')]
-    private $bets;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'Prediction')]
+    private $predictions;
 
     public function __construct() {
-        $this->bets = new ArrayCollection();
+        $this->predictions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -123,8 +123,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getBets(): Collection
+    public function getPredictions(): Collection
     {
-        return $this->bets;
+        return $this->predictions;
     }
 }

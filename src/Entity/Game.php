@@ -52,8 +52,8 @@ class Game
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $outcomeTeam2;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'Bet')]
-    private $bets;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'Prediction')]
+    private $predictions;
 
     public function __construct(
         string $id,
@@ -76,7 +76,7 @@ class Game
         $this->imageTeam2 = $imageTeam2;
         $this->state = $state;
 
-        $this->bets = new ArrayCollection();
+        $this->predictions = new ArrayCollection();
     }
 
     public function getId(): string
@@ -189,8 +189,21 @@ class Game
         $this->state = $state;
     }
 
-    public function getBets(): Collection
+    public function getPredictions(): Collection
     {
-        return $this->bets;
+        return $this->predictions;
+    }
+
+    public function getWinner(): ?string
+    {
+        if (null === $this->outcomeTeam1 || null === $this->outcomeTeam2) {
+            return null;
+        }
+
+        if (self::OUTCOME_WIN === $this->outcomeTeam1) {
+            return $this->getCodeTeam1();
+        } else {
+            return $this->getCodeTeam2();
+        }
     }
 }

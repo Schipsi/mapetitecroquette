@@ -6,6 +6,7 @@ namespace App\Command;
 
 use App\Entity\Game;
 use App\Repository\GameRepository;
+use App\Service\ProcessGameCompletion;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -18,17 +19,20 @@ class FetchGamesCommand extends Command
     private HttpClientInterface $httpClient;
     private GameRepository $gameRepository;
     private EntityManagerInterface $em;
+    private ProcessGameCompletion $processGameCompletion;
 
     public function __construct(
         HttpClientInterface $httpClient,
         GameRepository $gameRepository,
         EntityManagerInterface $em,
+        ProcessGameCompletion $processGameCompletion,
     ) {
         parent::__construct();
 
         $this->httpClient = $httpClient;
         $this->gameRepository = $gameRepository;
         $this->em = $em;
+        $this->processGameCompletion = $processGameCompletion;
     }
 
     protected static $defaultName = 'app:fetch-games';
@@ -84,6 +88,11 @@ class FetchGamesCommand extends Command
                     }
 
                     $this->em->flush();
+
+                    // If the game just completed, process game completion actions
+                    if (Game::STATE_COMPLETED === $event['state']) {
+                        $this->processGameCompletion->process($game);
+                    }
                 }
 
                 $progressBar->advance();

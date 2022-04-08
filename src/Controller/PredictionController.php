@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Bet;
 use App\Entity\Game;
+use App\Entity\Prediction;
 use App\Entity\User;
-use App\Repository\BetRepository;
 use App\Repository\GameRepository;
+use App\Repository\PredictionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,29 +14,29 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class BetController extends AbstractController
+class PredictionController extends AbstractController
 {
-    #[Route('/bet', name: 'bet', methods: 'POST')]
-    public function bet(
+    #[Route('/prediction', name: 'prediction', methods: 'POST')]
+    public function predict(
         Request $request,
         GameRepository $gameRepository,
-        BetRepository $betRepository,
+        PredictionRepository $predictionRepository,
         EntityManagerInterface $em,
         HttpClientInterface $httpClient,
     ): Response
     {
         $requestContent = \json_decode($request->getContent(), true);
         $gameId = $requestContent['game_id'];
-        $prediction = $requestContent['team'];
+        $team = $requestContent['team'];
 
         $game = $gameRepository->find($gameId);
         /** @var User $user */
         $user = $this->getUser();
-        $bet = $betRepository->findOneBy(['game' => $game, 'user' => $user]);
+        $prediction = $predictionRepository->findOneBy(['game' => $game, 'user' => $user]);
 
-        // Return current prediction if no prediction is given
-        if (null === $prediction) {
-            return $this->json(['success' => true, 'prediction' => $bet?->getPrediction()]);
+        // Return current prediction if no team is given
+        if (null === $team) {
+            return $this->json(['success' => true, 'prediction' => $prediction?->getTeam()]);
         }
 
         // Check if the game has not started
@@ -56,14 +56,14 @@ class BetController extends AbstractController
         }
 
         // Update or create the prediction
-        if (null === $bet) {
-            $bet = new Bet($user, $game, $prediction);
-            $betRepository->add($bet);
+        if (null === $prediction) {
+            $prediction = new Prediction($user, $game, $team);
+            $predictionRepository->add($prediction);
         } else {
-            $bet->setPrediction($prediction);
+            $prediction->setTeam($team);
             $em->flush();
         }
 
-        return $this->json(['success' => true, 'prediction' => $prediction]);
+        return $this->json(['success' => true, 'prediction' => $team]);
     }
 }

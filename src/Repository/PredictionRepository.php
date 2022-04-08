@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\Bet;
+use App\Entity\Prediction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Bet|null find($id, $lockMode = null, $lockVersion = null)
- * @method Bet|null findOneBy(array $criteria, array $orderBy = null)
- * @method Bet[]    findAll()
- * @method Bet[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Prediction|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Prediction|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Prediction[]    findAll()
+ * @method Prediction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BetRepository extends ServiceEntityRepository
+class PredictionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Bet::class);
+        parent::__construct($registry, Prediction::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Bet $entity, bool $flush = true): void
+    public function add(Prediction $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -37,7 +37,7 @@ class BetRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Bet $entity, bool $flush = true): void
+    public function remove(Prediction $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -46,7 +46,7 @@ class BetRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Bet[] Returns an array of Bet objects
+    //  * @return Prediction[] Returns an array of Prediction objects
     //  */
     /*
     public function findByExampleField($value)
@@ -63,7 +63,7 @@ class BetRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Bet
+    public function findOneBySomeField($value): ?Prediction
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.exampleField = :val')
