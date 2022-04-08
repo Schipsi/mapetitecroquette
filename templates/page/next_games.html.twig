@@ -17,8 +17,8 @@
                 <p class="text-md font-semibold">{{ game.date|date('d/m/Y  \\à G\\hi') }}</p>
                 <div class="mt-2 max-w-full flex justify-center items-center space-x-4">
                     <div
-                        class="w-28 md:w-60 p-4 hover:bg-gray-900 rounded-lg flex justify-end items-center space-x-4 cursor-pointer"
-                        :class="prediction === '{{ game.codeTeam1 }}' ? 'bg-gray-900 border border-gray-500' : 'border-none'"
+                        class="w-28 sm:w-40 md:w-60 p-4 hover:bg-gray-900 rounded-lg flex justify-end items-center space-x-4 cursor-pointer border"
+                        :class="prediction === '{{ game.codeTeam1 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
                         @click="makeBet('{{ game.id }}', '{{ game.codeTeam1 }}')"
                     >
                         <p class="hidden md:block">{{ game.nameTeam1 }}</p>
@@ -27,8 +27,8 @@
                     </div>
                     <p class="text-md font-semibold">VS</p>
                     <div
-                        class="w-28 md:w-60 p-4 hover:bg-gray-900 rounded-lg flex justify-start items-center space-x-4 cursor-pointer"
-                        :class="prediction === '{{ game.codeTeam2 }}' ? 'bg-gray-900 border border-gray-500' : 'border-none'"
+                        class="w-28 sm:w-40 md:w-60 p-4 hover:bg-gray-900 rounded-lg flex justify-start items-center space-x-4 cursor-pointer border"
+                        :class="prediction === '{{ game.codeTeam2 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
                         @click="makeBet('{{ game.id }}', '{{ game.codeTeam2 }}')"
                     >
                         <img class="w-10 h-10" src="{{ game.imageTeam2 }}"/>
@@ -36,6 +36,7 @@
                         <p class="md:hidden">{{ game.codeTeam2 }}</p>
                     </div>
                 </div>
+                <p id="error-{{ game.id }}" class="text-xs text-red-500"></p>
             </div>
             {% if not loop.last %}
                 <div class="w-full border-b border-gray-900"></div>
@@ -63,13 +64,14 @@
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify(data)
                     }).then((response) => {
-                        const res = response.json();
-                        console.log(res);
-                        return res;
+                        return response.json();
                     })
 
                     if (success) {
                         this.prediction = prediction;
+                    } else {
+                        document.querySelector(`p#error-${game_id}`)
+                            .innerHTML = 'Les prédictions ne sont plus possibles pour ce match. Il a probablement déjà commencé.';
                     }
                 }
             }

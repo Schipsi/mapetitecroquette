@@ -58,6 +58,18 @@ class HomeController extends AbstractController
             ]
         );
 
+        dump(\json_decode($response->getContent(), true));
+
+        $response = $httpClient->request(
+            'GET',
+            'https://esports-api.lolesports.com/persisted/gw/getEventDetails?hl=fr-FR&id=107417059263365741',
+            [
+                'headers' => [
+                    'x-api-key' => '0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z',
+                ],
+            ]
+        );
+
         dump(\json_decode($response->getContent(), true));die;
 
         return $this->render('base.html.twig');
