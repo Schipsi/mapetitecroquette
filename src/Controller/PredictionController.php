@@ -40,7 +40,7 @@ class PredictionController extends AbstractController
         }
 
         // Check if the game has not started
-        /*$response = $httpClient->request(
+        $response = $httpClient->request(
             'GET',
             \sprintf('https://esports-api.lolesports.com/persisted/gw/getEventDetails?hl=fr-FR&id=%s', $gameId),
             [
@@ -53,7 +53,7 @@ class PredictionController extends AbstractController
         $decodedResponse = \json_decode($response->getContent(), true);
         if (Game::STATE_UNSTARTED !== $decodedResponse['data']['event']['match']['games'][0]['state']) {
             return $this->json(['success' => false, 'prediction' => null]);
-        }*/
+        }
 
         // Update or create the prediction
         if (null === $prediction) {
