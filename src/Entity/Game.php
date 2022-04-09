@@ -43,14 +43,20 @@ class Game
     #[ORM\Column(type: 'string')]
     private string $imageTeam2;
 
-    #[ORM\Column(type: 'string')]
-    private string $state;
-
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $outcomeTeam1;
 
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $outcomeTeam2;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $scoreTeam1;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $scoreTeam2;
+
+    #[ORM\Column(type: 'string')]
+    private string $state;
 
     #[ORM\OneToMany(mappedBy: 'game', targetEntity: 'Prediction')]
     private $predictions;
@@ -177,6 +183,26 @@ class Game
     public function setOutComeTeam2(?string $outcomeTeam2): void
     {
         $this->outcomeTeam2 = $outcomeTeam2;
+    }
+
+    public function getScoreTeam1(): ?int
+    {
+        return $this->scoreTeam1;
+    }
+
+    public function setScoreTeam1(?int $scoreTeam1): void
+    {
+        $this->scoreTeam1 = $scoreTeam1;
+    }
+
+    public function getScoreTeam2(): ?int
+    {
+        return $this->scoreTeam2;
+    }
+
+    public function setScoreTeam2(?int $scoreTeam2): void
+    {
+        $this->scoreTeam2 = $scoreTeam2;
     }
 
     public function getState(): ?string

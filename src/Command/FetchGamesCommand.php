@@ -89,6 +89,8 @@ class FetchGamesCommand extends Command
                     if (Game::STATE_COMPLETED === $event['state']) {
                         $game->setOutComeTeam1($event['match']['teams'][0]['result']['outcome']);
                         $game->setOutComeTeam2($event['match']['teams'][1]['result']['outcome']);
+                        $game->setScoreTeam1($event['match']['teams'][0]['result']['gameWins']);
+                        $game->setScoreTeam2($event['match']['teams'][1]['result']['gameWins']);
                     }
 
                     $this->em->flush();
@@ -119,6 +121,8 @@ class FetchGamesCommand extends Command
             if (Game::STATE_COMPLETED === $event['state']) {
                 $game->setOutComeTeam1($event['match']['teams'][0]['result']['outcome']);
                 $game->setOutComeTeam2($event['match']['teams'][1]['result']['outcome']);
+                $game->setScoreTeam1($event['match']['teams'][0]['result']['gameWins']);
+                $game->setScoreTeam2($event['match']['teams'][1]['result']['gameWins']);
             }
 
             $this->gameRepository->add($game);

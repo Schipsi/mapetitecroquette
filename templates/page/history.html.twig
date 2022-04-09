@@ -8,22 +8,38 @@
     </div>
 
     <div class="flex justify-center items-center flex-col mt-6 space-y-6">
-        {% for game in games %}
+        {% for key, game in games %}
             <div class="flex justify-center items-center flex-col">
                 <p class="text-md font-semibold">{{ game.date|date('d/m/Y  \\à G\\hi') }}</p>
-                <div class="mt-2 max-w-full flex justify-center items-center space-x-4">
+                <div class="
+                    mt-2 max-w-full flex justify-center items-center space-x-4 rounded-lg
+                    {% if null is not same as predictions[key] %}
+                    border-4
+                        {% if game.winner is same as predictions[key] %}
+                            border-green-500
+                        {% else %}
+                            border-red-500
+                        {% endif %}
+                    {% endif %}
+                ">
                     <div class="
                         w-28 sm:w-40 md:w-60 p-4 rounded-lg flex justify-end items-center space-x-4 text-white
-                        {% if game.outComeTeam1 is same as constant('OUTCOME_WIN', game) %}border-4 border-green-500{% else %}border-4 border-red-500{% endif %}
+                        {% if game.outComeTeam1 is same as constant('OUTCOME_LOSS', game) %}
+                            opacity-30
+                        {% endif %}
                     ">
                         <p class="hidden md:block">{{ game.nameTeam1 }}</p>
                         <p class="md:hidden">{{ game.codeTeam1 }}</p>
                         <img class="w-10 h-10" src="{{ game.imageTeam1 }}"/>
                     </div>
-                    <p class="text-md font-semibold">VS</p>
+                    <p class="text-md font-semibold">
+                        {{ game.scoreTeam1 }}&nbsp;-&nbsp;{{ game.scoreTeam2 }}
+                    </p>
                     <div class="
                         w-28 sm:w-40 md:w-60 p-4 rounded-lg flex justify-start items-center space-x-4 text-white
-                        {% if game.outComeTeam2 is same as constant('OUTCOME_WIN', game) %}border-4 border-green-500{% else %}border-4 border-red-500{% endif %}
+                        {% if game.outComeTeam2 is same as constant('OUTCOME_LOSS', game) %}
+                            opacity-30
+                        {% endif %}
                     ">
                         <img class="w-10 h-10" src="{{ game.imageTeam2 }}"/>
                         <p class="hidden md:block">{{ game.nameTeam2 }}</p>
