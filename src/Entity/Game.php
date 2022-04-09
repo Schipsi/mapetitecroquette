@@ -85,6 +85,7 @@ class Game
         $this->imageTeam2 = $imageTeam2;
         $this->state = $state;
 
+        $this->pingSent = false;
         $this->predictions = new ArrayCollection();
     }
 

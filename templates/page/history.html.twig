@@ -10,7 +10,7 @@
     <div class="flex justify-center items-center flex-col mt-6 space-y-6">
         {% for key, game in games %}
             <div class="flex justify-center items-center flex-col">
-                <p class="text-md font-semibold">{{ game.date|date('d/m/Y  \\à G\\hi') }}</p>
+                <p class="text-md font-semibold">{{ game.date|date('d/m/Y  \\à G\\hi', 'Europe/Paris') }}</p>
                 <div class="
                     mt-2 max-w-full flex justify-center items-center space-x-4 rounded-lg
                     {% if null is not same as predictions[key] %}

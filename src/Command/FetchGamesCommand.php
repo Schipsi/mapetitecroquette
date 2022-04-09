@@ -77,7 +77,7 @@ class FetchGamesCommand extends Command
 
                 // If game is not completed, we update the game info to make sure it is fresh
                 if (Game::STATE_COMPLETED !== $game->getState()) {
-                    $game->setDate(new \DateTimeImmutable($event['startTime']));
+                    $game->setDate(new \DateTimeImmutable($event['startTime'], new \DateTimeZone('UTC')));
                     $game->setNameTeam1($event['match']['teams'][0]['name']);
                     $game->setNameTeam2($event['match']['teams'][1]['name']);
                     $game->setCodeTeam1($event['match']['teams'][0]['code']);
@@ -108,7 +108,7 @@ class FetchGamesCommand extends Command
 
             $game = new Game(
                 $matchId,
-                new \DateTimeImmutable($event['startTime']),
+                new \DateTimeImmutable($event['startTime'], new \DateTimeZone('UTC')),
                 $event['match']['teams'][0]['name'],
                 $event['match']['teams'][1]['name'],
                 $event['match']['teams'][0]['code'],
@@ -123,6 +123,11 @@ class FetchGamesCommand extends Command
                 $game->setOutComeTeam2($event['match']['teams'][1]['result']['outcome']);
                 $game->setScoreTeam1($event['match']['teams'][0]['result']['gameWins']);
                 $game->setScoreTeam2($event['match']['teams'][1]['result']['gameWins']);
+            }
+
+            // Avoid pinging for already completed games
+            if (Game::STATE_COMPLETED === $event['state']) {
+                $game->setPingSent(true);
             }
 
             $this->gameRepository->add($game);

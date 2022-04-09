@@ -91,7 +91,7 @@ class PingDiscordCommand extends Command
         $message = \sprintf(
             '%s matchs prévus aujourd\'hui (premier à %s), n\'oubliez pas de faire vos paris',
             \count($matchOfTheDays),
-            $firstMatch->getDate()->format('G\\hi')
+            $firstMatch->getDate()->setTimezone(new \DateTimeZone('Europe/Paris'))->format('G\\hi')
         );
 
         foreach ($usersToPing as $user) {
