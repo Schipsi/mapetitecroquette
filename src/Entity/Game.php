@@ -58,6 +58,9 @@ class Game
     #[ORM\Column(type: 'string')]
     private string $state;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $pingSent;
+
     #[ORM\OneToMany(mappedBy: 'game', targetEntity: 'Prediction')]
     private $predictions;
 
@@ -213,6 +216,16 @@ class Game
     public function setState(?string $state): void
     {
         $this->state = $state;
+    }
+
+    public function isPingSent(): bool
+    {
+        return $this->pingSent;
+    }
+
+    public function setPingSent(bool $pingSent): void
+    {
+        $this->pingSent = $pingSent;
     }
 
     public function getPredictions(): Collection

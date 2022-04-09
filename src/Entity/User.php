@@ -34,6 +34,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $discordId;
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'Prediction')]
     private $predictions;
 
@@ -112,6 +115,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getDiscordId(): ?string
+    {
+        return $this->discordId;
+    }
+
+    public function setDiscordId(?string $discordId): void
+    {
+        $this->discordId = $discordId;
     }
 
     /**

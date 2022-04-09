@@ -41,6 +41,41 @@
                     </div>
                 {{ form_end(usernameForm) }}
             </div>
+
+            <div
+                x-data="{ show: false }"
+                x-init="show = document.querySelector('form[name=\'discord_id_form\'] .text-red-500 ul li') !== null"
+            >
+                <div
+                    class="w-full flex justify-between items-center"
+                    :class="show ? 'hidden' : 'block'"
+                >
+                    <p class="font-semibold">ID Discord&nbsp;: {{ user.discordId ?? 'Non renseigné' }}</p>
+                    <p class="text-right underline cursor-pointer" @click="show = true">Modifier</p>
+                </div>
+                {{ form_start(discordIdForm) }}
+                    <div
+                        class="w-full flex justify-between items-start"
+                        :class="show ? 'block' : 'hidden'"
+                    >
+                        <div class="form-control">
+                            <div>
+                                {{ form_widget(discordIdForm.discordId, {'attr': {'class': 'text-black'}}) }}
+                            </div>
+
+                            <div class="text-red-500">
+                                {{ form_errors(discordIdForm.discordId) }}
+                            </div>
+                        </div>
+                        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Sauvegarder
+                        </button>
+                    </div>
+                {{ form_end(discordIdForm) }}
+                <p class="text-xs">Pour activer cette fonctionnalité, rentrez votre ID discord.</p>
+                <p class="text-xs">Vous pouvez le récupérer sur la page d'édition de votre profil, juste a coté de votre photo de profil.</p>
+                <p class="text-xs">Il s'agit d'un identifiant de 17 chiffres et non de votre pseudo#tag.</p>
+            </div>
         </div>
 
         <div class="flex justify-center items-center flex-col space-y-4">

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Prediction;
 use App\Entity\User;
+use App\Form\DiscordIdFormType;
 use App\Form\UsernameFormType;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,6 +29,13 @@ class HomeController extends AbstractController
         $usernameForm->handleRequest($request);
 
         if ($usernameForm->isSubmitted() && $usernameForm->isValid()) {
+            $entityManager->flush();
+        }
+
+        $discordIdForm = $this->createForm(DiscordIdFormType::class, $user);
+        $discordIdForm->handleRequest($request);
+
+        if ($discordIdForm->isSubmitted() && $discordIdForm->isValid()) {
             $entityManager->flush();
         }
 
@@ -57,6 +65,7 @@ class HomeController extends AbstractController
             'missed_predictions' => $missedPredictions,
             'total_predictions' => $completedPrediction,
             'usernameForm' => $usernameForm->createView(),
+            'discordIdForm' => $discordIdForm->createView(),
         ]);
     }
 }
