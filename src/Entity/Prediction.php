@@ -14,11 +14,11 @@ class Prediction
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'predictions')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'predictions')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private $user;
 
-    #[ORM\ManyToOne(targetEntity: 'Game', inversedBy: 'predictions')]
+    #[ORM\ManyToOne(targetEntity: Game::class, inversedBy: 'predictions')]
     #[ORM\JoinColumn(name: 'game_id', referencedColumnName: 'id')]
     private $game;
 

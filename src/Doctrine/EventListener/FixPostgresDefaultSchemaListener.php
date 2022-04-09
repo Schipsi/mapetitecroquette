@@ -20,12 +20,14 @@ final class FixPostgresDefaultSchemaListener
             ->getSchemaManager()
         ;
 
+        /* @phpstan-ignore-next-line */
         if (!$schemaManager instanceof PostgreSqlSchemaManager) {
             return;
         }
 
         $schema = $args->getSchema();
 
+        /* @phpstan-ignore-next-line */
         foreach ($schemaManager->getExistingSchemaSearchPaths() as $namespace) {
             if (!$schema->hasNamespace($namespace)) {
                 $schema->createNamespace($namespace);

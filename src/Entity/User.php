@@ -36,7 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $discordId;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'Prediction')]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Prediction::class)]
     private $predictions;
 
     public function __construct()

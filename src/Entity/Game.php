@@ -61,7 +61,7 @@ class Game
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $pingSent;
 
-    #[ORM\OneToMany(mappedBy: 'game', targetEntity: 'Prediction')]
+    #[ORM\OneToMany(mappedBy: 'game', targetEntity: Prediction::class)]
     private $predictions;
 
     public function __construct(
