@@ -11,12 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`game`')]
 class Game
 {
-    const STATE_UNSTARTED = 'unstarted';
-    const STATE_STARTED = 'started';
-    const STATE_COMPLETED = 'completed';
+    public const STATE_UNSTARTED = 'unstarted';
+    public const STATE_STARTED = 'started';
+    public const STATE_COMPLETED = 'completed';
 
-    const OUTCOME_WIN = 'win';
-    const OUTCOME_LOSS = 'loss';
+    public const OUTCOME_WIN = 'win';
+    public const OUTCOME_LOSS = 'loss';
 
     #[ORM\Id]
     #[ORM\Column(type: 'string')]

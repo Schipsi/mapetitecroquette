@@ -23,8 +23,7 @@ class PredictionController extends AbstractController
         PredictionRepository $predictionRepository,
         EntityManagerInterface $em,
         HttpClientInterface $httpClient,
-    ): Response
-    {
+    ): Response {
         $requestContent = \json_decode($request->getContent(), true);
         $gameId = $requestContent['game_id'];
         $team = $requestContent['team'];

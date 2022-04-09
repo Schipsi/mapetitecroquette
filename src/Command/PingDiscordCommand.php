@@ -16,6 +16,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class PingDiscordCommand extends Command
 {
+    protected static $defaultName = 'app:ping-discord';
     private HttpClientInterface $httpClient;
     private GameRepository $gameRepository;
     private UserRepository $userRepository;
@@ -38,8 +39,6 @@ class PingDiscordCommand extends Command
         $this->discordWebhookUrl = $discordWebhookUrl;
     }
 
-    protected static $defaultName = 'app:ping-discord';
-
     protected function configure(): void
     {
     }
@@ -47,8 +46,7 @@ class PingDiscordCommand extends Command
     protected function execute(
         InputInterface $input,
         OutputInterface $output
-    ): int
-    {
+    ): int {
         $users = $this->userRepository->findAll();
         $usersToPing = \array_filter(
             $users,
@@ -103,7 +101,7 @@ class PingDiscordCommand extends Command
             $this->discordWebhookUrl,
             [
                 'headers' => [
-                    'Content-type' => 'application/json'
+                    'Content-type' => 'application/json',
                 ],
                 'body' => \json_encode(['content' => $message]),
             ],

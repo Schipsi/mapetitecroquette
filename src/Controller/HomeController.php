@@ -18,10 +18,9 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function home(
         Request $request,
-        GameRepository$gameRepository,
+        GameRepository $gameRepository,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         /** @var User $user */
         $user = $this->getUser();
 

@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Game;
 use App\Entity\Prediction;
 use App\Entity\User;
-use App\Repository\GameRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +15,6 @@ class LadderController extends AbstractController
     public function show(UserRepository $userRepository): Response
     {
         $users = $userRepository->findAll();
-
 
         // Add number of correct predictions to users
         $ranking = \array_map(function (User $user) {
@@ -45,7 +42,7 @@ class LadderController extends AbstractController
         foreach ($ranking as $key => $rankedUser) {
             $ranking[$key]['rank'] = $rank;
 
-            if (\array_key_exists($key + 1, $ranking) && $rankedUser['correct_predictions'] > $ranking[$key +1]['correct_predictions']) {
+            if (\array_key_exists($key + 1, $ranking) && $rankedUser['correct_predictions'] > $ranking[$key + 1]['correct_predictions']) {
                 ++$rank;
             }
         }

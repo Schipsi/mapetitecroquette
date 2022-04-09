@@ -16,6 +16,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class FetchGamesCommand extends Command
 {
+    protected static $defaultName = 'app:fetch-games';
     private HttpClientInterface $httpClient;
     private GameRepository $gameRepository;
     private EntityManagerInterface $em;
@@ -35,8 +36,6 @@ class FetchGamesCommand extends Command
         $this->processGameCompletion = $processGameCompletion;
     }
 
-    protected static $defaultName = 'app:fetch-games';
-
     protected function configure(): void
     {
     }
@@ -44,8 +43,7 @@ class FetchGamesCommand extends Command
     protected function execute(
         InputInterface $input,
         OutputInterface $output
-    ): int
-    {
+    ): int {
         $response = $this->httpClient->request(
             'GET',
             'https://esports-api.lolesports.com/persisted/gw/getSchedule?hl=fr-FR&leagueId=98767991302996019',
@@ -72,8 +70,8 @@ class FetchGamesCommand extends Command
 
             $matchId = $event['match']['id'];
 
-            if (\in_array($matchId, $existingGamesId)) {
-                $game = $existingGames[\array_search($matchId, $existingGamesId)];
+            if (\in_array($matchId, $existingGamesId, true)) {
+                $game = $existingGames[\array_search($matchId, $existingGamesId, true)];
 
                 // If game is not completed, we update the game info to make sure it is fresh
                 if (Game::STATE_COMPLETED !== $game->getState()) {
