@@ -73,8 +73,12 @@
                     </div>
                 {{ form_end(discordIdForm) }}
                 <p class="text-xs">Pour activer cette fonctionnalité, rentrez votre ID discord.</p>
-                <p class="text-xs">Vous pouvez le récupérer sur la page d'édition de votre profil, juste a coté de votre photo de profil.</p>
-                <p class="text-xs">Il s'agit d'un identifiant de 17 chiffres et non de votre pseudo#tag.</p>
+                <p class="text-xs">
+                    Pour savoir comment le récupérer,
+                    <a href="https://support.discord.com/hc/fr/articles/206346498-O%C3%B9-trouver-l-ID-de-mon-compte-utilisateur-serveur-message" class="underline cursor-pointer">
+                        cliquez ici
+                    </a>
+                </p>
             </div>
         </div>
 
@@ -82,14 +86,24 @@
             <p class="text-md font-semibold text-center">Statistiques</p>
             <div class="flex justify-around items-center space-x-6">
                 <p class="w-40 sm:w-72 md:w-96">Nombre de predictions réussies</p>
-                <p class="w-20 text-right">{{ correct_predictions }} ({{ (correct_predictions / total_predictions)|format_number(style='percent') }})</p>
+                <p class="w-20 text-right">
+                    {{ correct_predictions }}
+                    {% if total_predictions > 0 %}
+                        ({{ (correct_predictions / total_predictions)|format_number(style='percent') }})
+                    {% endif %}
+                </p>
             </div>
             <div class="flex justify-around items-center space-x-6">
                 <p class="w-40 sm:w-72 md:w-96">Nombre de predictions ratée</p>
-                <p class="w-20 text-right">{{ incorrect_predictions }} ({{ (incorrect_predictions / total_predictions)|format_number(style='percent') }})</p>
+                <p class="w-20 text-right">
+                    {{ incorrect_predictions }}
+                    {% if total_predictions > 0 %}
+                        ({{ (incorrect_predictions / total_predictions)|format_number(style='percent') }})
+                    {% endif %}
+                </p>
             </div>
             <div class="flex justify-around items-center space-x-6">
-                <p class="w-40 sm:w-72 md:w-96">Nombre de predictions en attente</p>
+                <p class="w-40 sm:w-72 md:w-96">Nombre de predictions en attente de résultat</p>
                 <p class="w-20 text-right">{{ pending_predictions }}</p>
             </div>
             <div class="flex justify-around items-center space-x-6">
