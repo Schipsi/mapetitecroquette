@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Classement{% endblock %}
+
+{% block body %}
+    <div class="flex justify-center">
+        <h1 class="text-lg font-semibold">Classement</h1>
+    </div>
+
+    <div class="flex justify-center items-center flex-col mt-6 space-y-6">
+        <div class="flex justify-center items-center">
+            <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center font-semibold">Pseudo</p>
+            <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center font-semibold">Score</p>
+            <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center font-semibold">Rang</p>
+        </div>
+        {% for rankedUser in ranking %}
+            <div class="flex justify-center items-center">
+                <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center">{{ rankedUser['user'].username }}</p>
+                <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center">{{ rankedUser['correct_predictions'] }}</p>
+                <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center">{{ rankedUser['rank'] }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

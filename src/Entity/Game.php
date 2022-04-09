@@ -52,7 +52,7 @@ class Game
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $outcomeTeam2;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'Prediction')]
+    #[ORM\OneToMany(mappedBy: 'game', targetEntity: 'Prediction')]
     private $predictions;
 
     public function __construct(

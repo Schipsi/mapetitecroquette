@@ -66,6 +66,10 @@ class FetchGamesCommand extends Command
         $existingGamesId = \array_map(fn (Game $game): string => $game->getId(), $existingGames);
 
         foreach ($events as $event) {
+            if (!\array_key_exists('match', $event)) {
+                continue;
+            }
+
             $matchId = $event['match']['id'];
 
             if (\in_array($matchId, $existingGamesId)) {

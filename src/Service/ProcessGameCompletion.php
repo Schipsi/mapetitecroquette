@@ -10,7 +10,14 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ProcessGameCompletion
 {
-    public function process(Game $game, EntityManagerInterface $em): void
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
+    public function process(Game $game): void
     {
         // Update all predictions related to the match
         /** @var Prediction[] $predictions */
@@ -21,6 +28,6 @@ class ProcessGameCompletion
             $prediction->setRealised($prediction->getTeam() === $result);
         }
 
-        $em->flush();
+        $this->em->flush();
     }
 }

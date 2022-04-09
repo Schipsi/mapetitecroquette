@@ -15,9 +15,11 @@ class Prediction
     private $id;
 
     #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'predictions')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private $user;
 
     #[ORM\ManyToOne(targetEntity: 'Game', inversedBy: 'predictions')]
+    #[ORM\JoinColumn(name: 'game_id', referencedColumnName: 'id')]
     private $game;
 
     #[ORM\Column(type: 'string')]
@@ -36,7 +38,7 @@ class Prediction
         $this->team = $team;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -76,7 +78,7 @@ class Prediction
         $this->team = $team;
     }
 
-    public function getRealised(): ?bool
+    public function isRealised(): ?bool
     {
         return $this->realised;
     }

@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
+use App\Repository\GameRepository;
+use App\Repository\PredictionRepository;
+use App\Service\ProcessGameCompletion;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,7 +15,13 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function home(HttpClientInterface $httpClient): Response
+    public function home(
+        HttpClientInterface $httpClient,
+        GameRepository $gameRepository,
+        EntityManagerInterface $em,
+        ProcessGameCompletion $processGameCompletion,
+        PredictionRepository $predictionRepository,
+    ): Response
     {
         $response = $httpClient->request(
             'GET',
