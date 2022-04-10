@@ -90,7 +90,6 @@ class PingDiscordCommand extends Command
             }
         }
 
-
         // Remove users from ping list if they have entered all their predictions
         foreach ($usersToPing as $key => $user) {
             $missingMatch = false;

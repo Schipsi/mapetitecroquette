@@ -1,7 +1,6 @@
 name: CI
 
 on:
-    push:
     pull_request:
 
 jobs:
@@ -29,3 +28,7 @@ jobs:
               run: curl http://localhost
             - name: Check HTTPS reachability
               run: curl -k https://localhost
+            - name: PHP-cs-fixer
+              run: docker-compose run --rm php vendor/bin/php-cs-fixer fix --dry-run --diff --using-cache no
+            - name: PHPStan
+              run: docker-compose run --rm php php -d memory_limit=1G vendor/bin/phpstan analyse src
