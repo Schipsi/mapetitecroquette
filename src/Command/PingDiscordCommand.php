@@ -66,7 +66,7 @@ class PingDiscordCommand extends Command
         /** @var Game[] $incomingGames */
         $incomingGames = \array_filter(
             $notPingedGames,
-            fn (Game $game): bool => $game->getDate()->format('Y-m-d H-i') < (new \DateTime('-1 hour'))->format('Y-m-d H-i'),
+            fn (Game $game): bool => $game->getDate()->format('Y-m-d H-i') < (new \DateTime('+1 hour'))->format('Y-m-d H-i'),
         );
 
         // If there is no match in the next 1 hour, exit.

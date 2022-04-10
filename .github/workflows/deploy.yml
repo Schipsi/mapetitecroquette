@@ -1,21 +1,91 @@
 name: Deploy
 
-on: 
+on:
   push:
     branches:
       - 'main'
 
 jobs:
-  build:
+  deployment:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Executing remote command
+      - name: Install system udpate
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
-          script: whoami
+          script: apt update && apt upgrade --yes
+
+      - name: Install required docker packages
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: apt-get install --yes curl apt-transport-https ca-certificates software-properties-common
+
+      - name: Install docker
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+            sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+            apt update
+            apt install --yes docker-ce
+            
+      - name: Install docker-compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
+            if docker-compose --version; \
+            then docker-compose --version; \
+            else curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
+            && chmod +x /usr/local/bin/docker-compose \
+            && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose; fi
+
+      - name: Pulling project
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
+            cd /home/ubuntu
+            mkdir -p app
+            cd app
+            if cd mapetitecroquette; then git pull; else git clone ${{ secrets.APP_REPOSITORY }} mapetitecroquette; fi
+            
+      - name: Install frontend dependencies
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
+            cd /home/ubuntu/app/mapetitecroquette 
+            docker-compose run --rm node yarn install
+            
+      - name: Restart docker containers
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
+            cd /home/ubuntu/app/mapetitecroquette
+            docker-compose stop
+            SERVER_NAME=tierce-kappa.fr \
+            APP_SECRET=${{ secrets.APP_SECRET }} \
+            CADDY_MERCURE_JWT_SECRET=${{ secrets.CADDY_MERCURE_SECRET }} \
+            POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --force-recreate
