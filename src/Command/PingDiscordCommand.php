@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Entity\Game;
 use App\Entity\User;
 use App\Repository\GameRepository;
+use App\Repository\PredictionRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -19,6 +20,7 @@ class PingDiscordCommand extends Command
     protected static $defaultName = 'app:ping-discord';
     private HttpClientInterface $httpClient;
     private GameRepository $gameRepository;
+    private PredictionRepository $predictionRepository;
     private UserRepository $userRepository;
     private EntityManagerInterface $em;
     private string $discordWebhookUrl;
@@ -26,6 +28,7 @@ class PingDiscordCommand extends Command
     public function __construct(
         HttpClientInterface $httpClient,
         GameRepository $gameRepository,
+        PredictionRepository $predictionRepository,
         UserRepository $userRepository,
         EntityManagerInterface $em,
         string $discordWebhookUrl,
@@ -34,6 +37,7 @@ class PingDiscordCommand extends Command
 
         $this->httpClient = $httpClient;
         $this->gameRepository = $gameRepository;
+        $this->predictionRepository = $predictionRepository;
         $this->userRepository = $userRepository;
         $this->em = $em;
         $this->discordWebhookUrl = $discordWebhookUrl;
@@ -84,6 +88,28 @@ class PingDiscordCommand extends Command
             if ($matchOfTheDay->getDate()->format('Y-m-d H-i') < $firstMatch->getDate()->format('Y-m-d H-i')) {
                 $firstMatch = $matchOfTheDay;
             }
+        }
+
+
+        // Remove users from ping list if they have entered all their predictions
+        foreach ($usersToPing as $key => $user) {
+            $missingMatch = false;
+            foreach ($matchOfTheDays as $matchOfTheDay) {
+                if (null === $this->predictionRepository->findOneBy(['user' => $user, 'game' => $matchOfTheDay])) {
+                    $missingMatch = true;
+
+                    break;
+                }
+            }
+
+            if (!$missingMatch) {
+                unset($usersToPing[$key]);
+            }
+        }
+
+        // If all users have their predictions, do not ping
+        if (!\count($usersToPing)) {
+            return Command::SUCCESS;
         }
 
         $message = \sprintf(
