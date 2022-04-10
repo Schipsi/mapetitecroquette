@@ -19,3 +19,4 @@ services:
       - ./:/usr/src/
     environment:
       NODE_ENV: production
+    command: yarn build
