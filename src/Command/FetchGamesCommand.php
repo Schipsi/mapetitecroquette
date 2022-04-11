@@ -46,7 +46,7 @@ class FetchGamesCommand extends Command
     ): int {
         $response = $this->httpClient->request(
             'GET',
-            'https://esports-api.lolesports.com/persisted/gw/getSchedule?hl=fr-FR&leagueId=98767991302996019',
+            'https://esports-api.lolesports.com/persisted/gw/getSchedule?hl=fr-FR&leagueId=100695891328981122',
             [
                 'headers' => [
                     'x-api-key' => '0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z',
