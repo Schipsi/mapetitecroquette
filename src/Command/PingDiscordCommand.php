@@ -75,10 +75,10 @@ class PingDiscordCommand extends Command
         }
 
         // If there is at least one match, get all match of the day.
-        $matchOfTheDays = \array_filter(
+        $matchOfTheDays = \array_values(\array_filter(
             $notPingedGames,
             fn (Game $game): bool => $game->getDate()->format('Y-m-d') === (new \DateTime())->format('Y-m-d'),
-        );
+        ));
 
         /** @var Game $firstMatch */
         $firstMatch = $matchOfTheDays[0];
@@ -112,9 +112,10 @@ class PingDiscordCommand extends Command
         }
 
         $message = \sprintf(
-            '%s matchs prévus aujourd\'hui (premier à %s), n\'oubliez pas de faire vos paris',
+            '%s matchs prévus aujourd\'hui (premier à %s, %s pour le Canadien), n\'oubliez pas de faire vos paris',
             \count($matchOfTheDays),
-            $firstMatch->getDate()->setTimezone(new \DateTimeZone('Europe/Paris'))->format('G\\hi')
+            $firstMatch->getDate()->setTimezone(new \DateTimeZone('Europe/Paris'))->format('G\\hi'),
+            $firstMatch->getDate()->setTimezone(new \DateTimeZone('America/Toronto'))->format('G\\hi')
         );
 
         foreach ($usersToPing as $user) {
