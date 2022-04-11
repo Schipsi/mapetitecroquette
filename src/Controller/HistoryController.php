@@ -32,6 +32,7 @@ class HistoryController extends AbstractController
         }
 
         return $this->render('page/history.html.twig', [
+            'user' => $user,
             'games' => $games,
             'predictions' => $predictions,
         ]);
@@ -55,6 +56,7 @@ class HistoryController extends AbstractController
         }
 
         return $this->render('page/history.html.twig', [
+            'user' => $user,
             'games' => $games,
             'predictions' => $predictions,
         ]);

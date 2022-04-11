@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="flex justify-center">
-        <h1 class="text-lg font-semibold">Historique</h1>
+        <h1 class="text-lg font-semibold">Historique{% if app.user.id != user.id %} de {{ user.username }}{% endif %}</h1>
     </div>
 
     <div class="flex justify-center items-center flex-col mt-6 space-y-6">
