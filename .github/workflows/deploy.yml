@@ -83,9 +83,11 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           script: |
             cd /home/ubuntu/app/mapetitecroquette
-            docker-compose stop
+            docker-compose build
+            docker-compose down
             SERVER_NAME=tierce-kappa.fr \
             APP_SECRET=${{ secrets.APP_SECRET }} \
             CADDY_MERCURE_JWT_SECRET=${{ secrets.CADDY_MERCURE_SECRET }} \
             POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --force-recreate
+            DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }} \
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate

@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Game
 {
     public const STATE_UNSTARTED = 'unstarted';
-    public const STATE_STARTED = 'started';
+    public const STATE_STARTED = 'inProgress';
     public const STATE_COMPLETED = 'completed';
 
     public const OUTCOME_WIN = 'win';
