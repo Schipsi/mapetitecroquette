@@ -45,6 +45,22 @@ class GameRepository extends ServiceEntityRepository
         }
     }
 
+    public function findGameOfTheDay()
+    {
+        $start = \DateTime::createFromFormat( "Y-m-d H:i:s", date("Y-m-d 00:00:00") );
+        $end = \DateTime::createFromFormat( "Y-m-d H:i:s", date("Y-m-d 23:59:59") );
+
+
+        return $this->createQueryBuilder('game')
+            ->andWhere('game.date > :start_date')
+            ->setParameter('start_date', $start)
+            ->andWhere('game.date < :end_date')
+            ->setParameter('start_date', $end)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Game[] Returns an array of Game objects
     //  */

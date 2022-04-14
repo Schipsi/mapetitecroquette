@@ -24,3 +24,6 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Command\PingDiscordCommand:
         $discordWebhookUrl: '%env(DISCORD_WEBHOOK_URL)%'
+
+    App\Command\RecapDiscordCommand:
+        $discordWebhookUrl: '%env(DISCORD_WEBHOOK_URL)%'
