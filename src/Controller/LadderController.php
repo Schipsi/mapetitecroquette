@@ -37,13 +37,15 @@ class LadderController extends AbstractController
             return $a['correct_predictions'] < $b['correct_predictions'] ? 1 : -1;
         });
 
-        // Add final ranking in case of egality
+        // Add final ranking in case of equality
         $rank = 1;
+        $displayedRank = 1;
         foreach ($ranking as $key => $rankedUser) {
-            $ranking[$key]['rank'] = $rank;
+            $ranking[$key]['rank'] = $displayedRank;
 
+            ++$rank;
             if (\array_key_exists($key + 1, $ranking) && $rankedUser['correct_predictions'] > $ranking[$key + 1]['correct_predictions']) {
-                ++$rank;
+                $displayedRank = $rank;
             }
         }
 

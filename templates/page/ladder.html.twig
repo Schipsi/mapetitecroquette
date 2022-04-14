@@ -7,14 +7,27 @@
         <h1 class="text-lg font-semibold">Classement</h1>
     </div>
 
-    <div class="flex justify-center items-center flex-col mt-6 space-y-6">
+    <div class="flex justify-center items-center flex-col mt-6 space-y-4">
         <div class="flex justify-center items-center">
             <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center font-semibold">Pseudo</p>
             <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center font-semibold">Score</p>
             <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center font-semibold">Rang</p>
         </div>
         {% for rankedUser in ranking %}
-            <a href="{{ path('user-history', { 'id': rankedUser['user'].id }) }}" class="flex justify-center items-center">
+            <div class="w-full border-t border-gray-600"></div>
+            <a
+                href="{{ path('user-history', { 'id': rankedUser['user'].id }) }}"
+                class="
+                    p-2 rounded-full flex justify-center items-center
+                    {% if rankedUser['rank'] is same as 1 %}
+                        bg-yellow-400 text-black
+                    {% elseif rankedUser['rank'] is same as 2 %}
+                        bg-gray-400 text-black
+                    {% elseif rankedUser['rank'] is same as 3 %}
+                        bg-orange-800 text-black
+                    {% endif %}
+                "
+            >
                 <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center">{{ rankedUser['user'].username }}</p>
                 <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center">{{ rankedUser['correct_predictions'] }}</p>
                 <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center">{{ rankedUser['rank'] }}</p>
