@@ -18,13 +18,16 @@ class LadderController extends AbstractController
 
         // Add number of correct predictions to users
         $ranking = \array_map(function (User $user) {
+            $predictions = $user->getPredictions();
+
             return [
                 'user' => $user,
                 'correct_predictions' => \array_reduce(
-                    $user->getPredictions()->toArray(),
+                    $predictions->toArray(),
                     fn (int $carry, Prediction $prediction): int => $prediction->isRealised() ? ++$carry : $carry,
                     0
                 ),
+                'total_predictions' => $predictions->count(),
             ];
         }, $users);
 
