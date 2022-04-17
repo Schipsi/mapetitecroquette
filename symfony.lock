@@ -258,6 +258,15 @@
             "src/Kernel.php"
         ]
     },
+    "symfony/google-mailer": {
+        "version": "6.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.4",
+            "ref": "f8fd4ddb9b477510f8f4bce2b9c054ab428c0120"
+        }
+    },
     "symfony/http-client": {
         "version": "v6.0.7"
     },
@@ -520,6 +529,18 @@
     },
     "symfony/yaml": {
         "version": "v6.0.3"
+    },
+    "symfonycasts/reset-password-bundle": {
+        "version": "1.13",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "97c1627c0384534997ae1047b93be517ca16de43"
+        },
+        "files": [
+            "config/packages/reset_password.yaml"
+        ]
     },
     "thetribe/coding-standard": {
         "version": "v0.2.0"
