@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use App\Entity\Prediction;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -27,7 +28,11 @@ class LadderController extends AbstractController
                     fn (int $carry, Prediction $prediction): int => $prediction->isRealised() ? ++$carry : $carry,
                     0
                 ),
-                'total_predictions' => $predictions->count(),
+                'total_predictions' => \array_reduce(
+                    $predictions->toArray(),
+                    fn (int $carry, Prediction $prediction): int => $prediction->getGame()->getState() === Game::STATE_COMPLETED ? ++$carry : $carry,
+                    0
+                ),
             ];
         }, $users);
 
