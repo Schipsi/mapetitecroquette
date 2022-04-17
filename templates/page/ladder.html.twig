@@ -20,7 +20,15 @@
                 class="p-2 flex justify-center items-center"
             >
                 <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center">{{ rankedUser['user'].username }}</p>
-                <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center">{{ rankedUser['correct_predictions'] }}</p>
+                <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center">
+                    {{ rankedUser['correct_predictions'] }}
+                    {% if rankedUser['total_predictions'] is not same as 0 %}
+                        <span>
+                            <br class="block md:hidden"/>
+                            ({{ (rankedUser['correct_predictions'] / rankedUser['total_predictions'])|format_number(style='percent') }})
+                        </span>
+                    {% endif %}
+                </p>
                 <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center">
                     <span class="
                         px-3 py-2 rounded-full
