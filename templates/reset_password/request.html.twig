@@ -12,15 +12,11 @@
         {{ form_row(requestForm.email) }}
         <div>
             <small>
-                Entre ton email et on t'enverra un email de réinitialisation de mot de passe. 
+                Entre ton adresse email et on t'enverra un email de réinitialisation de mot de passe. 
             </small>
         </div>
 
-        <button class="btn btn-primary">Envoyer un email de réinitialisation</button>
+        <br/>
+        <button class="btn btn-primary underline text-cyan-400">Envoyer un email de réinitialisation</button>
     {{ form_end(requestForm) }}
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link href="{{ asset('assets/reset_password.scss') }}" rel="stylesheet">
 {% endblock %}

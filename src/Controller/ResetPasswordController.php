@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -13,8 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport\TransportInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -135,7 +137,7 @@ class ResetPasswordController extends AbstractController
     }
 
     /**
-     * Use TransportInterface instead of MailerInterface to work with gmail stmp
+     * Use TransportInterface instead of MailerInterface to work with gmail stmp.
      */
     private function processSendingPasswordResetEmail(string $emailFormData, TransportInterface $mailer, TranslatorInterface $translator): RedirectResponse
     {
@@ -160,6 +162,7 @@ class ResetPasswordController extends AbstractController
                 $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_HANDLE, [], 'ResetPasswordBundle'),
                 $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
             ));
+
             return $this->redirectToRoute('app_check_email');
         }
 
