@@ -8,6 +8,7 @@ services:
       APP_SECRET: ${APP_SECRET}
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET}
       DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
+      MAILER_DSN: ${MAILER_DSN}
 
   caddy:
     environment:
