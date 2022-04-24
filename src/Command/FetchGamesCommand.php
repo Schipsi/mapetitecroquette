@@ -85,6 +85,15 @@ class FetchGamesCommand extends Command
                     $game->setState($event['state']);
 
                     if (Game::STATE_COMPLETED === $event['state']) {
+                        // prevent empty result update
+                        if (null === $event['match']['teams'][0]['result']['outcome']
+                            || null === $event['match']['teams'][1]['result']['outcome']
+                            || null === $event['match']['teams'][0]['result']['gameWins']
+                            || null === $event['match']['teams'][1]['result']['gameWins']
+                        ) {
+                            continue;
+                        }
+
                         $game->setOutComeTeam1($event['match']['teams'][0]['result']['outcome']);
                         $game->setOutComeTeam2($event['match']['teams'][1]['result']['outcome']);
                         $game->setScoreTeam1($event['match']['teams'][0]['result']['gameWins']);
