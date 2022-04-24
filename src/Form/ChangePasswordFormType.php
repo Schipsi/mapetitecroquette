@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -18,7 +20,10 @@ class ChangePasswordFormType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
-                    'attr' => ['autocomplete' => 'new-password'],
+                    'attr' => [
+                        'autocomplete' => 'email',
+                        'class' => 'ml-3 text-black',
+                    ],
                     'constraints' => [
                         new NotBlank([
                             'message' => 'Il faut rentrer un mot de passe',
@@ -33,7 +38,10 @@ class ChangePasswordFormType extends AbstractType
                     'label' => 'Nouveau mot de passe',
                 ],
                 'second_options' => [
-                    'attr' => ['autocomplete' => 'new-password'],
+                    'attr' => [
+                        'autocomplete' => 'email',
+                        'class' => 'ml-3 text-black',
+                    ],
                     'label' => 'Répète le mot de passe',
                 ],
                 'invalid_message' => 'Les deux champs doivent être identiques.',
