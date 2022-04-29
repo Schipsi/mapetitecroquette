@@ -91,4 +91,5 @@ jobs:
             POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} \
             DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }} \
             MAILER_DSN=${{ secrets.MAILER_DSN }} \
+            SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate
