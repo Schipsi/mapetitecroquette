@@ -9,6 +9,7 @@ services:
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET}
       DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
       MAILER_DSN: ${MAILER_DSN}
+      SENTRY_DSN: ${SENTRY_DSN}
 
   caddy:
     environment:
