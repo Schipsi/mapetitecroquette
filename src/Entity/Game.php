@@ -64,8 +64,13 @@ class Game
     #[ORM\OneToMany(mappedBy: 'game', targetEntity: Prediction::class)]
     private $predictions;
 
+    #[ORM\ManyToOne(targetEntity: League::class, inversedBy: 'games')]
+    #[ORM\JoinColumn(name: 'league_id', referencedColumnName: 'id', nullable: false)]
+    private $league;
+
     public function __construct(
         string $id,
+        League $league,
         \DateTimeImmutable $date,
         string $nameTeam1,
         string $nameTeam2,
@@ -76,6 +81,7 @@ class Game
         ?string $state = self::STATE_UNSTARTED,
     ) {
         $this->id = $id;
+        $this->league = $league;
         $this->date = $date;
         $this->nameTeam1 = $nameTeam1;
         $this->nameTeam2 = $nameTeam2;
@@ -232,6 +238,16 @@ class Game
     public function getPredictions(): Collection
     {
         return $this->predictions;
+    }
+
+    public function getLeague(): League
+    {
+        return $this->league;
+    }
+
+    public function setGame(League $league): void
+    {
+        $this->league = $league;
     }
 
     public function getWinner(): ?string
