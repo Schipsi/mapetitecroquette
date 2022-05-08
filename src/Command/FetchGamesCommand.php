@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\Game;
-use App\Entity\League;
 use App\Repository\GameRepository;
 use App\Repository\LeagueRepository;
 use App\Service\ProcessGameCompletion;
