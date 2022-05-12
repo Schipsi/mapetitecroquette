@@ -3,33 +3,50 @@
 namespace App\Controller;
 
 use App\Entity\Game;
+use App\Entity\League;
 use App\Entity\Prediction;
 use App\Entity\User;
+use App\Form\LeagueFormType;
+use App\Repository\LeagueRepository;
+use App\Repository\PredictionRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class LadderController extends AbstractController
 {
     #[Route('/ladder', name: 'ladder')]
-    public function show(UserRepository $userRepository): Response
-    {
+    public function show(
+        Request $request,
+        UserRepository $userRepository,
+        LeagueRepository $leagueRepository,
+        PredictionRepository $predictionRepository
+    ): Response {
+        $leagues = $leagueRepository->findAll();
+        $defaultLeague = $leagueRepository->findOneBy(['active' => true]);
+
+        $form = $this->createForm(LeagueFormType::class, ['league' => $defaultLeague]);
+        $form->handleRequest($request);
+
+        /** @var League $filterLeague */
+        $filterLeague = $form->get('league')->getData();
         $users = $userRepository->findAll();
 
         // Add number of correct predictions to users
-        $ranking = \array_map(function (User $user) {
-            $predictions = $user->getPredictions();
+        $ranking = \array_map(function (User $user) use ($filterLeague, $predictionRepository) {
+            $predictions = $predictionRepository->getUserPredictionForLeague($user, $filterLeague);
 
             return [
                 'user' => $user,
                 'correct_predictions' => \array_reduce(
-                    $predictions->toArray(),
+                    $predictions,
                     fn (int $carry, Prediction $prediction): int => $prediction->isRealised() ? ++$carry : $carry,
                     0
                 ),
                 'total_predictions' => \array_reduce(
-                    $predictions->toArray(),
+                    $predictions,
                     fn (int $carry, Prediction $prediction): int => $prediction->getGame()->getState() === Game::STATE_COMPLETED ? ++$carry : $carry,
                     0
                 ),
@@ -59,6 +76,9 @@ class LadderController extends AbstractController
 
         return $this->render('page/ladder.html.twig', [
             'ranking' => $ranking,
+            'leagues' => $leagues,
+            'default_league' => $defaultLeague,
+            'form' => $form->createView(),
         ]);
     }
 }

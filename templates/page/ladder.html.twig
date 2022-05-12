@@ -7,6 +7,18 @@
         <h1 class="text-lg font-semibold">Classement</h1>
     </div>
 
+
+    {{ form_start(form) }}
+        <div class="mt-2 flex justify-center items-center">
+            <p class="mr-2">League&nbsp;:</p>
+                {{ form_row(form.league) }}
+
+                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Valider
+                </button>
+        </div>
+    {{ form_start(form) }}
+
     <div class="flex justify-center items-center flex-col mt-6 space-y-4">
         <div class="flex justify-center items-center">
             <p class="max-w-[30%] w-24 sm:w-32 md:w-40 lg:w-60 px-4 text-md text-center font-semibold">Pseudo</p>
