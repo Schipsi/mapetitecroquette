@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\League;
 use App\Entity\Prediction;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -43,6 +45,19 @@ class PredictionRepository extends ServiceEntityRepository
         if ($flush) {
             $this->_em->flush();
         }
+    }
+
+    public function getUserPredictionForLeague(User $user, League $league)
+    {
+        return $this->createQueryBuilder('prediction')
+            ->innerJoin('prediction.game', 'game')
+            ->andWhere('prediction.user = :user')
+            ->setParameter('user', $user)
+            ->andWhere('game.league = :league')
+            ->setParameter('league', $league)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**
