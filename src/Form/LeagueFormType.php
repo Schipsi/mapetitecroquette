@@ -20,7 +20,7 @@ class LeagueFormType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'attr' => [
-                    'class' => 'mx-2 form-select px-3 py-1.5 text-base font-normal text-gray-700
+                    'class' => 'mx-2 pr-8 form-select px-3 py-1.5 text-base font-normal text-gray-700
                         bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded
                         transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none',
                 ],
