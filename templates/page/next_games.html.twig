@@ -4,38 +4,8 @@
 
 {% block body %}
     {% if currentGame is defined and currentGame is not null %}
-        <div class="flex justify-center">
-            <h1 class="text-lg font-semibold">Match en cours</h1>
-        </div>
+        {% include('component/current_game.html.twig') %}
 
-        <div
-            class="flex justify-center items-center flex-col"
-            x-data="predict('{{ currentGamePrediction }}')"
-        >
-            <div class="mt-4 flex justify-center items-center">
-                <img class="w-10 h-10 mr-2" src="{{ currentGame.league.image }}"/>
-                <p class="text-md font-semibold">{{ currentGame.league.shortName }}</p>
-            </div>
-            <div class="max-w-full flex justify-center items-center space-x-4">
-                <div
-                    class="w-28 sm:w-40 md:w-60 p-4 rounded-lg flex justify-end items-center space-x-4 border"
-                    :class="prediction === '{{ currentGame.codeTeam1 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
-                >
-                    <p class="hidden md:block">{{ currentGame.nameTeam1 }}</p>
-                    <p class="md:hidden">{{ currentGame.codeTeam1 }}</p>
-                    <img class="w-10 h-10" src="{{ currentGame.imageTeam1 }}"/>
-                </div>
-                <p class="text-md font-semibold">VS</p>
-                <div
-                    class="w-28 sm:w-40 md:w-60 p-4 rounded-lg flex justify-start items-center space-x-4 border"
-                    :class="prediction === '{{ currentGame.codeTeam2 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
-                >
-                    <img class="w-10 h-10" src="{{ currentGame.imageTeam2 }}"/>
-                    <p class="hidden md:block">{{ currentGame.nameTeam2 }}</p>
-                    <p class="md:hidden">{{ currentGame.codeTeam2 }}</p>
-                </div>
-            </div>
-        </div>
         <div class="my-8 w-full border-t border-b border-gray-600"></div>
     {% endif %}
 
@@ -45,37 +15,12 @@
 
     <div class="flex justify-center items-center flex-col mt-6 space-y-6">
         {% for key, game in games %}
-            <div
-                class="flex justify-center items-center flex-col"
-                x-data="predict('{{ predictions[key] }}')"
-            >
-                <div class="mt-4 flex justify-center items-center">
-                    <p class="text-md font-semibold mr-2">{{ game.date|date('d/m/Y  \\à G\\hi', 'Europe/Paris') }} - {{ game.league.shortName }}</p>
-                    <img class="w-10 h-10" src="{{ game.league.image }}" alt="{{ game.league.fullName }}"/>
-                </div>
-                <div class="mt-2 max-w-full flex justify-center items-center space-x-4">
-                    <div
-                        class="w-28 sm:w-40 md:w-60 p-4 hover:bg-gray-900 rounded-lg flex justify-end items-center space-x-4 cursor-pointer border"
-                        :class="prediction === '{{ game.codeTeam1 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
-                        @click="makePrediction('{{ game.id }}', '{{ game.codeTeam1 }}')"
-                    >
-                        <p class="hidden md:block">{{ game.nameTeam1 }}</p>
-                        <p class="md:hidden">{{ game.codeTeam1 }}</p>
-                        <img class="w-10 h-10" src="{{ game.imageTeam1 }}"/>
-                    </div>
-                    <p class="text-md font-semibold">VS</p>
-                    <div
-                        class="w-28 sm:w-40 md:w-60 p-4 hover:bg-gray-900 rounded-lg flex justify-start items-center space-x-4 cursor-pointer border"
-                        :class="prediction === '{{ game.codeTeam2 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
-                        @click="makePrediction('{{ game.id }}', '{{ game.codeTeam2 }}')"
-                    >
-                        <img class="w-10 h-10" src="{{ game.imageTeam2 }}"/>
-                        <p class="hidden md:block">{{ game.nameTeam2 }}</p>
-                        <p class="md:hidden">{{ game.codeTeam2 }}</p>
-                    </div>
-                </div>
-                <p id="error-{{ game.id }}" class="text-xs text-red-500"></p>
-            </div>
+            {% if game.type is same as constant('TYPE_BO1', game) %}
+                {% include('component/simple_game.html.twig') %}
+            {% else %}
+                {% include('component/multi_game.html.twig') %}
+            {% endif %}
+
             {% if not loop.last %}
                 <div class="w-full border-b border-gray-900"></div>
             {% endif %}
@@ -90,10 +35,10 @@
         function predict(prediction) {
             return {
                 prediction,
-                async makePrediction(game_id, team) {
+                async makePrediction(gameId, team) {
                     const fetchUrl = "{{ path('prediction') }}";
                     const data = {
-                        game_id,
+                        game_id: gameId,
                         team,
                     };
 
@@ -108,8 +53,94 @@
                     if (success) {
                         this.prediction = prediction;
                     } else {
-                        document.querySelector(`p#error-${game_id}`)
+                        document.querySelector(`p#error-${gameId}`)
                             .innerHTML = 'Les prédictions ne sont plus possibles pour ce match. Il a probablement déjà commencé.';
+                    }
+                },
+                async makeMultiGamePrediction(gameId, range, maxRange, team1, team2) {
+                    document.querySelector(`p#info-${gameId}`).innerHTML = '';
+
+                    if ('0' === range) {
+                        await this.resetPrediction(gameId);
+
+                        return;
+                    }
+
+                    let team;
+                    if (range > 0) {
+                        team = team2;
+                    } else {
+                        team = team1;
+                    }
+
+                    const fetchUrl = "{{ path('prediction') }}";
+                    const data = {
+                        game_id: gameId,
+                        team,
+                        losing_team_score: maxRange - Math.abs(range),
+                    };
+
+                    let { prediction, success } = await fetch(fetchUrl, {
+                        method: "POST",
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    }).then((response) => {
+                        return response.json();
+                    })
+
+                    if (success) {
+                        this.prediction = prediction;
+                    } else {
+                        document.querySelector(`p#error-${gameId}`)
+                            .innerHTML = 'Les prédictions ne sont plus possibles pour ce match. Il a probablement déjà commencé.';
+                    }
+                },
+                async resetPrediction(gameId) {
+                    const fetchUrl = "{{ path('prediction-reset') }}";
+                    const data = {
+                        game_id: gameId,
+                    };
+
+                    let { prediction, success } = await fetch(fetchUrl, {
+                        method: "POST",
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    }).then((response) => {
+                        return response.json();
+                    })
+
+                    if (success) {
+                        this.prediction = prediction;
+                    } else {
+                        document.querySelector(`p#error-${gameId}`)
+                            .innerHTML = 'Les prédictions ne sont plus possibles pour ce match. Il a probablement déjà commencé.';
+                    }
+
+                    document.querySelector(`p#info-${gameId}`).innerHTML = 'Votre prediction a été réinitialisée.';
+                },
+                displayScore(team1, team2, maxRange) {
+                    console.log(this.prediction.team, this.prediction.losing_team_score);
+                    if (!this.prediction.team || !this.prediction.losing_team_score) {
+                        return '0  - 0';
+                    }
+
+                    if (this.prediction.team === team1) {
+                        return `${maxRange} - ${this.prediction.losing_team_score}`;
+                    }
+
+                    return `${this.prediction.losing_team_score} - ${maxRange}`;
+                },
+                initRange(team1, team2, maxRange) {
+                    if (!this.prediction.team || !this.prediction.losing_team_score) {
+                        this.prediction.range = 0;
+
+                        return;
+                    }
+
+                    if (this.prediction.team === team1) {
+                        this.prediction.range = -(maxRange - this.prediction.losing_team_score);
+                    } else {
+                        this.prediction.range = maxRange - this.prediction.losing_team_score;
                     }
                 }
             }

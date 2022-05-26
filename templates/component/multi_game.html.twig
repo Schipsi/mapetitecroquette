@@ -1,0 +1,64 @@
+<div
+    class="flex justify-center items-center flex-col"
+    x-data="predict({ team: '{{ predictions[key]['team'] }}', losing_team_score: '{{  predictions[key]['losing_team_score'] }}' })"
+    x-init="initRange('{{ game.codeTeam1 }}', '{{ game.codeTeam2 }}', 3)"
+>
+    <p class="font-semibold">{{ game.type }}</p>
+    <div class="flex justify-center items-center">
+        <p class="text-md font-semibold mr-2">{{ game.date|date('d/m/Y  \\à G\\hi', 'Europe/Paris') }} - {{ game.league.shortName }}</p>
+        <img class="w-10 h-10" src="{{ game.league.image }}" alt="{{ game.league.fullName }}"/>
+    </div>
+    <div class="mt-2 max-w-full flex justify-center items-center space-x-4">
+        <div
+            class="w-28 sm:w-40 md:w-60 rounded-lg flex justify-center items-center flex-col border"
+            :class="prediction.team === '{{ game.codeTeam1 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
+        >
+            <img class="w-10 h-10" src="{{ game.imageTeam1 }}"/>
+            <p class="hidden md:block">{{ game.nameTeam1 }}</p>
+            <p class="md:hidden">{{ game.codeTeam1 }}</p>
+        </div>
+        <div class="flex justify-between items-center flex-col">
+            <div x-data="{ range: prediction.range }" class="relative pt-1 bg-red">
+                <div class="flex justify-center items-center">
+                    <label
+                        for="range"
+                        class="font-bold"
+                        x-text="displayScore('{{ game.codeTeam1 }}', '{{ game.codeTeam2 }}', {{ game.type is same as constant('TYPE_BO3', game) ? '2' : '3' }})"
+                    ></label>
+                </div>
+                {% if game.type is same as constant('TYPE_BO3', game) %}
+                    <input
+                        x-on:change.debounce="makeMultiGamePrediction('{{ game.id }}', $event.target.value, 2, '{{ game.codeTeam1 }}', '{{ game.codeTeam2 }}')"
+                        x-model="range"
+                        x-init="initRange('{{ game.codeTeam1 }}', '{{ game.codeTeam2 }}', 2)"
+                        type="range"
+                        name="range"
+                        min="-2"
+                        max="2"
+                        class="w-full h-2 bg-blue-100 appearance-none"
+                    />
+                {% else %}
+                    <input
+                        x-on:change.debounce="makeMultiGamePrediction('{{ game.id }}', $event.target.value, 3, '{{ game.codeTeam1 }}', '{{ game.codeTeam2 }}')"
+                        x-model="range"
+                        type="range"
+                        name="range"
+                        min="-3"
+                        max="3"
+                        class="w-full h-2 bg-blue-100 appearance-none"
+                    />
+                {% endif %}
+            </div>
+        </div>
+        <div
+            class="w-28 sm:w-40 md:w-60 rounded-lg flex justify-center items-center flex-col border"
+            :class="prediction.team === '{{ game.codeTeam2 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
+        >
+            <img class="w-10 h-10" src="{{ game.imageTeam2 }}"/>
+            <p class="hidden md:block">{{ game.nameTeam2 }}</p>
+            <p class="md:hidden">{{ game.codeTeam2 }}</p>
+        </div>
+    </div>
+    <p id="error-{{ game.id }}" class="text-xs text-red-500"></p>
+    <p id="info-{{ game.id }}" class="text-xs"></p>
+</div>

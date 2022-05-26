@@ -18,6 +18,10 @@ class Game
     public const OUTCOME_WIN = 'win';
     public const OUTCOME_LOSS = 'loss';
 
+    public const TYPE_BO1 = 'BO1';
+    public const TYPE_BO3 = 'BO3';
+    public const TYPE_BO5 = 'BO5';
+
     #[ORM\Id]
     #[ORM\Column(type: 'string')]
     private string $id;
@@ -56,6 +60,9 @@ class Game
     private ?int $scoreTeam2;
 
     #[ORM\Column(type: 'string')]
+    private string $type;
+
+    #[ORM\Column(type: 'string')]
     private string $state;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
@@ -78,6 +85,7 @@ class Game
         string $codeTeam2,
         string $imageTeam1,
         string $imageTeam2,
+        string $type = self::TYPE_BO1,
         ?string $state = self::STATE_UNSTARTED,
     ) {
         $this->id = $id;
@@ -89,6 +97,7 @@ class Game
         $this->codeTeam2 = $codeTeam2;
         $this->imageTeam1 = $imageTeam1;
         $this->imageTeam2 = $imageTeam2;
+        $this->type = $type;
         $this->state = $state;
 
         $this->pingSent = false;
@@ -213,6 +222,16 @@ class Game
     public function setScoreTeam2(?int $scoreTeam2): void
     {
         $this->scoreTeam2 = $scoreTeam2;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): void
+    {
+        $this->type = $type;
     }
 
     public function getState(): ?string

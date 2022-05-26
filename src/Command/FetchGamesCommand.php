@@ -139,6 +139,7 @@ class FetchGamesCommand extends Command
                     $event['match']['teams'][1]['code'],
                     $event['match']['teams'][0]['image'],
                     $event['match']['teams'][1]['image'],
+                    \sprintf('BO%s', $event['match']['strategy']['count']),
                     $event['state'],
                 );
 

@@ -1,0 +1,31 @@
+<div
+    class="flex justify-center items-center flex-col"
+    x-data="predict({ team: '{{ predictions[key]['team'] }}'})"
+>
+    <div class="mt-4 flex justify-center items-center">
+        <p class="text-md font-semibold mr-2">{{ game.date|date('d/m/Y  \\à G\\hi', 'Europe/Paris') }} - {{ game.league.shortName }}</p>
+        <img class="w-10 h-10" src="{{ game.league.image }}" alt="{{ game.league.fullName }}"/>
+    </div>
+    <div class="mt-2 max-w-full flex justify-center items-center space-x-4">
+        <div
+            class="w-28 sm:w-40 md:w-60 py-2 hover:bg-gray-900 rounded-lg flex justify-center items-center flex-col cursor-pointer border"
+            :class="prediction.team === '{{ game.codeTeam1 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
+            @click="makePrediction('{{ game.id }}', '{{ game.codeTeam1 }}')"
+        >
+            <img class="w-10 h-10" src="{{ game.imageTeam1 }}"/>
+            <p class="hidden md:block">{{ game.nameTeam1 }}</p>
+            <p class="md:hidden">{{ game.codeTeam1 }}</p>
+        </div>
+        <p class="text-md font-semibold">VS</p>
+        <div
+            class="w-28 sm:w-40 md:w-60 py-2 hover:bg-gray-900 rounded-lg flex justify-center items-center flex-col cursor-pointer border"
+            :class="prediction.team === '{{ game.codeTeam2 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
+            @click="makePrediction('{{ game.id }}', '{{ game.codeTeam2 }}')"
+        >
+            <img class="w-10 h-10" src="{{ game.imageTeam2 }}"/>
+            <p class="hidden md:block">{{ game.nameTeam2 }}</p>
+            <p class="md:hidden">{{ game.codeTeam2 }}</p>
+        </div>
+    </div>
+    <p id="error-{{ game.id }}" class="text-xs text-red-500"></p>
+</div>

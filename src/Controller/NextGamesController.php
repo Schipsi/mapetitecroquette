@@ -26,23 +26,24 @@ class NextGamesController extends AbstractController
             $prediction = $predictionRepository->findOneBy(['user' => $user, 'game' => $game]);
 
             if (null !== $prediction) {
-                $predictions[$key] = $prediction->getTeam();
+                $predictions[$key]['team'] = $prediction->getTeam();
+                $predictions[$key]['losing_team_score'] = $prediction->getLosingTeamScore();
             } else {
-                $predictions[$key] = null;
+                $predictions[$key]['team'] = null;
+                $predictions[$key]['losing_team_score'] = null;
             }
         }
 
         $currentGamePrediction = $predictionRepository->findOneBy(['user' => $user, 'game' => $currentGame]);
 
-        if (null !== $currentGamePrediction) {
-            $currentGamePrediction = $currentGamePrediction->getTeam();
-        }
-
         return $this->render('page/next_games.html.twig', [
             'games' => $games,
             'currentGame' => $currentGame,
             'predictions' => $predictions,
-            'currentGamePrediction' => $currentGamePrediction,
+            'currentGamePrediction' => [
+                'team' => $currentGamePrediction?->getTeam(),
+                'losing_team_score' => $currentGamePrediction?->getLosingTeamScore()
+            ],
         ]);
     }
 }

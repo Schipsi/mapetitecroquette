@@ -25,6 +25,9 @@ class Prediction
     #[ORM\Column(type: 'string')]
     private $team;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $losingTeamScore;
+
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $realised;
 
@@ -32,10 +35,12 @@ class Prediction
         User $user,
         Game $game,
         string $team,
+        ?int $losingTeamScore = null,
     ) {
         $this->user = $user;
         $this->game = $game;
         $this->team = $team;
+        $this->losingTeamScore = $losingTeamScore;
     }
 
     public function getId(): int
@@ -76,6 +81,16 @@ class Prediction
     public function setTeam(string $team): void
     {
         $this->team = $team;
+    }
+
+    public function getLosingTeamScore(): ?int
+    {
+        return $this->losingTeamScore;
+    }
+
+    public function setLosingTeamScore(?int $losingTeamScore): void
+    {
+        $this->losingTeamScore = $losingTeamScore;
     }
 
     public function isRealised(): ?bool
