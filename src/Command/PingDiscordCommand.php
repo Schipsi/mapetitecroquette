@@ -80,6 +80,11 @@ class PingDiscordCommand extends Command
             fn (Game $game): bool => $game->getDate()->format('Y-m-d') === (new \DateTime())->format('Y-m-d'),
         ));
 
+        // If there is no match today
+        if (!\count($matchOfTheDays)) {
+            return Command::SUCCESS;
+        }
+
         /** @var Game $firstMatch */
         $firstMatch = $matchOfTheDays[0];
         foreach ($matchOfTheDays as $matchOfTheDay) {
