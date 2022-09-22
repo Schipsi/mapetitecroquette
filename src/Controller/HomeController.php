@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use App\Entity\Prediction;
 use App\Entity\User;
 use App\Form\DiscordIdFormType;
@@ -54,14 +55,16 @@ class HomeController extends AbstractController
             fn (Prediction $prediction): bool => null === $prediction->isRealised(),
         ));
         $completedPrediction = $incorrectPredictions + $correctPredictions;
-        $missedPredictions = \count($gameRepository->findAll()) - $predictions->count();
+
+        $futureGames = $gameRepository->findBy(['state' => [Game::STATE_UNSTARTED, Game::STATE_STARTED]]);
+        $waitingPredictions = \count($futureGames) - $pendingPredictions;
 
         return $this->render('page/home.html.twig', [
             'user' => $user,
             'correct_predictions' => $correctPredictions,
             'incorrect_predictions' => $incorrectPredictions,
             'pending_predictions' => $pendingPredictions,
-            'missed_predictions' => $missedPredictions,
+            'waiting_predictions' => $waitingPredictions,
             'total_predictions' => $completedPrediction,
             'usernameForm' => $usernameForm->createView(),
             'discordIdForm' => $discordIdForm->createView(),
