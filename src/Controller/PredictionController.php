@@ -25,17 +25,30 @@ class PredictionController extends AbstractController
         HttpClientInterface $httpClient,
     ): Response {
         $requestContent = \json_decode($request->getContent(), true);
+
         $gameId = $requestContent['game_id'];
         $team = $requestContent['team'];
 
         $game = $gameRepository->find($gameId);
         /** @var User $user */
+
+        $losingTeamScore = null;
+        if ($game->getType() !== Game::TYPE_BO1) {
+            $losingTeamScore = $requestContent['losing_team_score'];
+        }
+
         $user = $this->getUser();
         $prediction = $predictionRepository->findOneBy(['game' => $game, 'user' => $user]);
 
         // Return current prediction if no team is given
         if (null === $team) {
-            return $this->json(['success' => true, 'prediction' => $prediction?->getTeam()]);
+            return $this->json([
+                'success' => true,
+                'prediction' => [
+                    'team' => $prediction?->getTeam(),
+                    'losing_team_score' => $prediction?->getLosingTeamScore()
+                ]
+            ]);
         }
 
         // Check if the game has not started
@@ -56,13 +69,47 @@ class PredictionController extends AbstractController
 
         // Update or create the prediction
         if (null === $prediction) {
-            $prediction = new Prediction($user, $game, $team);
-            $predictionRepository->add($prediction);
+            if ($game->getType() === Game::TYPE_BO1) {
+                $prediction = new Prediction($user, $game, $team);
+                $predictionRepository->add($prediction);
+            } else {
+                $prediction = new Prediction($user, $game, $team, $losingTeamScore);
+                $predictionRepository->add($prediction);
+            }
+
         } else {
-            $prediction->setTeam($team);
-            $em->flush();
+            if ($game->getType() === Game::TYPE_BO1) {
+                $prediction->setTeam($team);
+                $em->flush();
+            } else {
+                $prediction->setTeam($team);
+                $prediction->setLosingTeamScore($losingTeamScore);
+                $em->flush();
+            }
         }
 
-        return $this->json(['success' => true, 'prediction' => $team]);
+        return $this->json(['success' => true, 'prediction' => ['team' => $team, 'losing_team_score' => $losingTeamScore]]);
+    }
+
+    #[Route('/prediction/reset', name: 'prediction-reset', methods: 'POST')]
+    public function resetPrediction(
+        Request $request,
+        GameRepository $gameRepository,
+        PredictionRepository $predictionRepository,
+    ): Response {
+        $requestContent = \json_decode($request->getContent(), true);
+
+        $gameId = $requestContent['game_id'];
+
+        $game = $gameRepository->find($gameId);
+        /** @var User $user */
+
+        $user = $this->getUser();
+        $prediction = $predictionRepository->findOneBy(['game' => $game, 'user' => $user]);
+
+        // Delete prediction if it exists
+        $predictionRepository->remove($prediction);
+
+        return $this->json(['success' => true, 'prediction' => ['team' => null, 'losing_team_score' => null]]);
     }
 }

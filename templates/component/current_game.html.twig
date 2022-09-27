@@ -1,0 +1,32 @@
+<div class="flex justify-center">
+    <h1 class="text-lg font-semibold">Match en cours</h1>
+</div>
+
+<div
+    class="flex justify-center items-center flex-col"
+    x-data="predict({ team: '{{ currentGamePrediction['team'] }}', losing_team_score: '{{ currentGamePrediction['losing_team_score'] }}' })"
+>
+    <div class="mt-4 flex justify-center items-center">
+        <img class="w-10 h-10 mr-2" src="{{ currentGame.league.image }}"/>
+        <p class="text-md font-semibold">{{ currentGame.league.shortName }}</p>
+    </div>
+    <div class="max-w-full flex justify-center items-center space-x-4">
+        <div
+            class="w-28 sm:w-40 md:w-60 rounded-lg flex justify-end items-center flex-col border"
+            :class="prediction.team === '{{ currentGame.codeTeam1 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
+        >
+            <img class="w-10 h-10" src="{{ currentGame.imageTeam1 }}"/>
+            <p class="hidden md:block">{{ currentGame.nameTeam1 }}</p>
+            <p class="md:hidden">{{ currentGame.codeTeam1 }}</p>
+        </div>
+        <p class="text-md font-semibold">VS</p>
+        <div
+            class="w-28 sm:w-40 md:w-60 rounded-lg flex justify-start items-center flex-col border"
+            :class="prediction.team === '{{ currentGame.codeTeam2 }}' ? 'bg-gray-900 border-gray-500' : 'border-gray-700'"
+        >
+            <img class="w-10 h-10" src="{{ currentGame.imageTeam2 }}"/>
+            <p class="hidden md:block">{{ currentGame.nameTeam2 }}</p>
+            <p class="md:hidden">{{ currentGame.codeTeam2 }}</p>
+        </div>
+    </div>
+</div>
